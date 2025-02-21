@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+select[multiple] {
+    height: 100px;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* === Стиль для радиокнопок в одну строку === */
+.gender-options {
+    display: flex;             /* Располагаем элементы в строку */
+    align-items: center;        /* Выравниваем элементы по вертикали */
+    gap: 15px;                /* Отступы между элементами */
+}
+
+.gender-options label {
+    display: inline-flex;      /* Метка тоже должна быть в одну строку с элементом */
+    align-items: center;        /* Выравниваем текст и радиокнопку по вертикали */
+    margin-bottom: 0;          /* Убираем отступ снизу у label */
+    font-weight: normal;        /* Убираем жирный шрифт у label */
+    color: #555;                 /* Цвет текста */
+}
+
+.gender-options input[type="radio"] {
+    margin-right: 5px;         /* Отступ между радиокнопкой и текстом */
+}
+
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: block;
+    margin: 10px auto;
+}
+
+button[type="submit"]:hover {
+    background-color: #3e8e41;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+/*  Стили для сообщения об ошибке */
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+}
+
+/*  Стиль для обязательных полей */
+input:required,
+select:required,
+textarea:required {
+    border-color: #800000; /* Красная рамка для обязательных полей */
+}

@@ -11,6 +11,7 @@ public class JPAConfiguration {
         if (emf == null) {
             try { // Укажите persistence unit
                 emf = Persistence.createEntityManagerFactory("MyPersistenceUnit");
+                System.out.println(emf.getProperties());
             } catch (Throwable ex) {
                 System.err.println("Initial EntityManagerFactory creation failed." + ex);
                 throw new ExceptionInInitializerError(ex);
