@@ -51,8 +51,16 @@ public class FormServlet extends HttpServlet {
         String email = req.getParameter("email");
         LocalDate birthday;
         String gender = req.getParameter("gender").toLowerCase();
-        List<Long> languages = Arrays.stream(req.getParameterValues("language")).
-                map(Long::parseLong).toList();
+        List<Long> languages;
+        try {
+            languages = Arrays.stream(req.getParameterValues("language")).
+                    map(Long::parseLong).toList();
+        }
+        catch (Exception e) {
+            req.setAttribute("errorMessage", "Некорректно указаны любимые языки программирования");
+            req.getRequestDispatcher("/pages/form.jsp").forward(req, resp);
+            return;
+        }
         String biography = req.getParameter("biography");
         String agreement = req.getParameter("agreement");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

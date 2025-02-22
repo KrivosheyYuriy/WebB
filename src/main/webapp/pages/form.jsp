@@ -47,7 +47,6 @@
 
         <label for="language">Любимый язык программирования:</label>
         <select id="language" name="language" required multiple>
-            <option value="">Любимый язык программирования</option>
             <option value="1">Pascal</option>
             <option value="2">C</option>
             <option value="3">C++</option>
