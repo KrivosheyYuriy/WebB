@@ -29,6 +29,6 @@ public class UserRepositoryImpl extends AbstractRepositoryImpl<User> implements 
                 em.close();
             }
         }
-        return results.isEmpty() ? null : results.getFirst();
+        return results.isEmpty() ? null : results.get(0);
     }
 }

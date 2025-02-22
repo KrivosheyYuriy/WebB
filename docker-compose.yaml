@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  webb-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: webb-app:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db  # Использовать имя сервиса db в качестве хоста
+      - DB_PORT=5432
+      - DB_NAME=webb
+      - DB_USER=postgres
+      - DB_PASSWORD=123
+    networks:
+      - app_network
+    restart: always
+
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=webb
+    networks:
+      - app_network
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./src/main/resources/sql:/docker-entrypoint-initdb.d
+    restart: always
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:
