@@ -30,7 +30,6 @@ public class PollService {
         LocalDate birthday = formDto.getBirthday();
         String gender = formDto.getGender();
         String biography = formDto.getBiography();
-        LocalDateTime received = formDto.getReceived();
 
         // Создание PollAnswers с использованием конструктора
         PollAnswers pollAnswers = new PollAnswers(
@@ -40,7 +39,7 @@ public class PollService {
                 phoneNumber,
                 email,
                 biography,
-                received
+                LocalDateTime.now()
         );
 
         // Сохранение PollAnswers, чтобы получить ID
@@ -56,7 +55,6 @@ public class PollService {
             }
             PollAnswerLanguage pollAnswerLanguage = new PollAnswerLanguage(pollAnswers, language);
             pollAnswers.addPollAnswerLanguage(pollAnswerLanguage);
-
         }
 
         // Merge PollAnswers (cascade persist должен сохранить PollAnswerLanguage)

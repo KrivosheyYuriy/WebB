@@ -1,4 +1,4 @@
-package org.example.webb.validation;
+package org.example.webb.validation.phone;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

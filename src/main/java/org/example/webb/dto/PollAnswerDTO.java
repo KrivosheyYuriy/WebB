@@ -1,16 +1,17 @@
 package org.example.webb.dto;
 
 import jakarta.validation.constraints.*;
-import org.example.webb.validation.Phone;
+import org.example.webb.validation.date.Date;
+import org.example.webb.validation.languages.ValidLanguageIds;
+import org.example.webb.validation.phone.Phone;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class PollAnswerDTO {
     @NotBlank(message = "ФИО не может быть пустым")
     @Size(min = 2, max = 100, message = "ФИО должно содержать от 2 до 100 символов")
-    @Pattern(regexp = "^[а-яА-ЯёЁ\\s-]+$", message = "ФИО может содержать только буквы, пробелы и дефисы")
+    @Pattern(regexp = "^([А-ЯЁ][а-яё]+[\\-\\s]?){3,}$", message = "ФИО может содержать только буквы, пробелы и дефисы")
     private final String name;
 
     @NotBlank(message = "Телефон не может быть пустым")
@@ -22,6 +23,7 @@ public class PollAnswerDTO {
     private final String email;
 
     @NotNull(message = "Дата рождения не может быть пустой")
+    @Date
     private final LocalDate birthday;
 
     @NotBlank(message = "Пол не может быть пустым")
@@ -29,15 +31,13 @@ public class PollAnswerDTO {
     private final String gender;
 
     @Size(min = 1, message = "Выберите хотя бы один язык программирования")
+    @ValidLanguageIds
     private final List<Long> languagesId;
 
     private final String biography;
 
-    @NotNull(message = "Нужно знать время принятия")
-    private final LocalDateTime received;
-
     public PollAnswerDTO(String name, String phone, String email, LocalDate birthday, String gender,
-                         List<Long> languagesId, String biography, LocalDateTime received) {
+                         List<Long> languagesId, String biography) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -45,7 +45,6 @@ public class PollAnswerDTO {
         this.gender = gender;
         this.languagesId = languagesId;
         this.biography = biography;
-        this.received = received;
     }
 
     public String getBiography() {
@@ -74,9 +73,5 @@ public class PollAnswerDTO {
 
     public String getName() {
         return name;
-    }
-
-    public LocalDateTime getReceived() {
-        return received;
     }
 }

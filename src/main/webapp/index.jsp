@@ -8,6 +8,6 @@
 <h1><%= "Hello World!" %>
 </h1>
 <br/>
-<a href="pages/form.jsp">Form</a>
+<a href="pages/form">Form</a>
 </body>
 </html>
