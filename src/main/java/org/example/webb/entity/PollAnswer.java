@@ -1,5 +1,4 @@
 package org.example.webb.entity;
-
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -8,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class PollAnswers {
+public class PollAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,8 +29,12 @@ public class PollAnswers {
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PollAnswerLanguage> pollAnswersLanguages = new HashSet<>();
 
-    public PollAnswers(String username, LocalDate birthday, String gender, String phoneNumber, String email,
-                       String biography, LocalDateTime received) {
+    @OneToOne // Добавляем связь
+    @JoinColumn(name = "user_id") // Foreign key column in PollAnswer
+    private User user; // Reference to User entity
+
+    public PollAnswer(String username, LocalDate birthday, String gender, String phoneNumber, String email,
+                      String biography, LocalDateTime received, User user) {
         this.username = username;
         this.birthday = birthday;
         this.gender = gender;
@@ -40,9 +43,10 @@ public class PollAnswers {
         this.biography = biography;
         this.received = received;
         this.pollAnswersLanguages = new HashSet<>();
+        this.user = user; // Важно: устанавливаем связь в конструкторе
     }
 
-    public PollAnswers() {
+    public PollAnswer() {
         this.pollAnswersLanguages = new HashSet<>();
     }
 
@@ -86,4 +90,11 @@ public class PollAnswers {
         pollAnswersLanguages.add(pollAnswerLanguage);
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

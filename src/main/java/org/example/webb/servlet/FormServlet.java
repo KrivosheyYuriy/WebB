@@ -11,11 +11,16 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.example.webb.dto.PollAnswerDTO;
+import org.example.webb.entity.PollAnswer;
+import org.example.webb.entity.User;
 import org.example.webb.repository.LanguageRepository;
 import org.example.webb.repository.PollAnswersRepository;
+import org.example.webb.repository.UserRepository;
 import org.example.webb.repository.impl.LanguageRepositoryImpl;
 import org.example.webb.repository.impl.PollAnswersRepositoryImpl;
+import org.example.webb.repository.impl.UserRepositoryImpl;
 import org.example.webb.service.PollService;
+import org.example.webb.service.UserService;
 import org.example.webb.util.CookieUtil;
 
 import java.io.IOException;
@@ -35,6 +40,8 @@ public class FormServlet extends HttpServlet {
 
     private Validator validator;
     private PollService pollService;
+    private UserService userService;
+    private UserRepository userRepository;
     private PollAnswersRepository pollAnswersRepository;
     private LanguageRepository languageRepository;
 
@@ -44,7 +51,9 @@ public class FormServlet extends HttpServlet {
         validator = factory.getValidator();
         pollAnswersRepository = new PollAnswersRepositoryImpl(); // или другой способ создания репозитория
         languageRepository = new LanguageRepositoryImpl();
+        userRepository = new UserRepositoryImpl();
         pollService = new PollService(pollAnswersRepository, languageRepository); // Передаем репозитории
+        userService = new UserService(userRepository);
     }
 
     @Override
@@ -132,9 +141,12 @@ public class FormServlet extends HttpServlet {
             req.getRequestDispatcher("/pages/form").forward(req, resp);
         } else {
             // Валидация пройдена
-            pollService.addPoll(formDto); //  Передаем DTO в сервис
+            PollAnswer answer = pollService.addPoll(formDto); //  Передаем DTO в сервис
+            User user = userService.addUser();
+            user.setPollAnswer(answer);
+            answer.setUser(user);
+            userRepository.merge(user);
             saveSuccessValuesToCookies(req, resp, formParams);
-            resp.getWriter().println("Form submitted successfully!");
             resp.sendRedirect(req.getContextPath() + "/");
         }
     }

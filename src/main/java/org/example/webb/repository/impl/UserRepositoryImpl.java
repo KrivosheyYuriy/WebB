@@ -17,7 +17,7 @@ public class UserRepositoryImpl extends AbstractRepositoryImpl<User> implements 
         TypedQuery<User> query = getEntityManager().createQuery
                 ("SELECT u FROM User u WHERE u.username = :username", User.class);
         query.setParameter("username", username);
-        List<User> results = query.getResultList();
+        List<User> results;
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -30,5 +30,15 @@ public class UserRepositoryImpl extends AbstractRepositoryImpl<User> implements 
             }
         }
         return results.isEmpty() ? null : results.get(0);
+    }
+
+    @Override
+    public long count() {
+        try {
+            return getEntityManager().createQuery("Select max(u.id) from User u", Long.class).getSingleResult();
+        }
+        catch (NullPointerException e) {
+            return 0;
+        }
     }
 }

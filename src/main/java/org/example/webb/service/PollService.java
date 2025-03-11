@@ -1,9 +1,10 @@
 package org.example.webb.service;
 
+import jakarta.transaction.Transactional;
 import org.example.webb.dto.PollAnswerDTO;
 import org.example.webb.entity.Language;
 import org.example.webb.entity.PollAnswerLanguage;
-import org.example.webb.entity.PollAnswers;
+import org.example.webb.entity.PollAnswer;
 import org.example.webb.repository.LanguageRepository;
 import org.example.webb.repository.PollAnswersRepository;
 
@@ -22,7 +23,8 @@ public class PollService {
         this.languageRepository = languageRepository;
     }
 
-    public void addPoll(PollAnswerDTO formDto) {
+    @Transactional
+    public PollAnswer addPoll(PollAnswerDTO formDto) {
         // Инициализация параметров
         String username = formDto.getName();
         String phoneNumber = formDto.getPhone();
@@ -32,18 +34,19 @@ public class PollService {
         String biography = formDto.getBiography();
 
         // Создание PollAnswers с использованием конструктора
-        PollAnswers pollAnswers = new PollAnswers(
+        PollAnswer pollAnswer = new PollAnswer(
                 username,
                 birthday,
                 gender,
                 phoneNumber,
                 email,
                 biography,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
 
         // Сохранение PollAnswers, чтобы получить ID
-        pollRepository.save(pollAnswers);
+        pollRepository.save(pollAnswer);
 
         // Преобразование языков из DTO в Entity и создание связей
         for (Long languageId : formDto.getLanguagesId()) {
@@ -53,11 +56,12 @@ public class PollService {
                 System.err.println("Language not found with ID: " + languageId);
                 continue; // Пропускаем язык, если он не найден
             }
-            PollAnswerLanguage pollAnswerLanguage = new PollAnswerLanguage(pollAnswers, language);
-            pollAnswers.addPollAnswerLanguage(pollAnswerLanguage);
+            PollAnswerLanguage pollAnswerLanguage = new PollAnswerLanguage(pollAnswer, language);
+            pollAnswer.addPollAnswerLanguage(pollAnswerLanguage);
         }
 
         // Merge PollAnswers (cascade persist должен сохранить PollAnswerLanguage)
-        pollRepository.merge(pollAnswers); // Use merge to update
+        pollRepository.merge(pollAnswer); // Use merge to update
+        return pollAnswer;
     }
 }

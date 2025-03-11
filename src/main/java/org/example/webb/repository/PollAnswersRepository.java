@@ -1,6 +1,6 @@
 package org.example.webb.repository;
 
-import org.example.webb.entity.PollAnswers;
+import org.example.webb.entity.PollAnswer;
 
-public interface PollAnswersRepository extends CrudRepository<PollAnswers, Long> {
+public interface PollAnswersRepository extends CrudRepository<PollAnswer, Long> {
 }

@@ -11,14 +11,14 @@ public class PollAnswerLanguage {
     @ManyToOne
     @MapsId("pollAnswerId") // Ссылка на поле pollAnswerId в PollAnswerLanguageKey
     @JoinColumn(name = "poll_answer_id")
-    private PollAnswers answer;
+    private PollAnswer answer;
 
     @ManyToOne
     @MapsId("languageId") // Ссылка на поле languageId в PollAnswerLanguageKey
     @JoinColumn(name = "language_id")
     private Language language;
 
-    public PollAnswerLanguage(PollAnswers answer, Language language) {
+    public PollAnswerLanguage(PollAnswer answer, Language language) {
         this.id = new PollAnswerLanguageKey(answer.getId(),  language.getId());
         this.answer = answer;
         this.language = language;
@@ -26,7 +26,7 @@ public class PollAnswerLanguage {
 
     public PollAnswerLanguage() {}
 
-    public PollAnswers getAnswer() {
+    public PollAnswer getAnswer() {
         return answer;
     }
 

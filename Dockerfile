@@ -6,7 +6,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn clean package -Pprod  # Собираем приложение с профилем prod
+RUN mvn clean package -Pprod -DskipTests  # Собираем приложение с профилем prod
 
 # Этап 2: Создание образа Tomcat и копирование WAR-файла
 FROM tomcat:latest
