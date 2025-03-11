@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px; /* Увеличен padding */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Улучшена тень */
+    text-align: center;
+    width: 500px; /* Увеличена ширина */
+    font-size: 16px; /* Увеличен размер шрифта для всего контейнера */
+}
+
+h2 {
+    color: #333;
+    font-size: 28px; /* Увеличен размер заголовка */
+    margin-bottom: 20px; /* Увеличен отступ снизу */
+}
+
+.info-item {
+    margin: 15px 0; /* Увеличен отступ сверху и снизу */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-label {
+    font-weight: bold;
+    color: #555;
+    text-align: left;
+    flex: 1;
+    font-size: 18px; /* Увеличен размер шрифта для label */
+}
+
+.info-value {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px 16px; /* Увеличен padding */
+    color: #495057;
+    text-align: left;
+    flex: 2;
+    font-size: 16px; /* Увеличен размер шрифта для value */
+}
+
+.copy-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px; /* Увеличен padding */
+    border-radius: 6px; /* Слегка закруглены углы */
+    cursor: pointer;
+    font-size: 16px; /* Увеличен размер шрифта для кнопки */
+    margin-left: 15px; /* Увеличен отступ слева */
+}
+
+.copy-button:hover {
+    background-color: #0056b3;
+}
+
+p {
+    color: #777;
+    font-size: 18px; /* Увеличен размер шрифта для параграфа */
+}

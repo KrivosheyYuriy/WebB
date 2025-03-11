@@ -90,13 +90,6 @@ button[type="submit"]:hover {
     background-color: #3e8e41;
 }
 
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #333;
-    color: white;
-}
-
 /*  Стили для сообщения об ошибке */
 .error-message {
     color: red;

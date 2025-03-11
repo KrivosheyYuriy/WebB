@@ -1,0 +1,53 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
+    margin: 0; /* Reset default margin */
+    font-family: Arial, sans-serif;
+}
+
+.content {
+    flex: 1; /* Allow the content to grow and take up remaining space */
+    padding: 20px;
+    text-align: center;
+}
+
+/* Navbar styles */
+.navbar {
+    display: flex;
+    align-items: center; /* Vertical alignment */
+    background-color: #343a40;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    justify-content: flex-end; /* Aligns items to the end (right) */
+}
+
+.navbar a {
+    float: right; /* Или используйте flexbox, как в предыдущих ответах */
+    display: block;
+    color: white;
+    text-align: center;
+    margin-right: 20px;
+    padding: 14px 24px; /* Увеличиваем горизонтальный padding */
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+h1 {
+    color: #333;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

@@ -2,8 +2,10 @@
 <%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
-    <title>Form</title>
-    <link href="../styles/form.css" rel="stylesheet">
+    <title>Форма</title>
+    <link rel="stylesheet" href="../styles/form.css">
+    <link rel="stylesheet" href="../styles/footer.css">
+    <script src="../js/copyToClipboard.js"></script>
 </head>
 <body>
 <div class="content">
