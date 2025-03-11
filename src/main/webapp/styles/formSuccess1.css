@@ -65,7 +65,24 @@ h2 {
     background-color: #0056b3;
 }
 
+.main-page-button {
+    display: inline-block;
+    background-color: #28a745;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 18px;
+    margin-top: 20px;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+
+.main-page-button:hover {
+    background-color: #218838;
+}
+
 p {
     color: #777;
-    font-size: 18px; /* Увеличен размер шрифта для параграфа */
+    font-size: 18px;
 }

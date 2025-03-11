@@ -146,8 +146,9 @@ public class FormServlet extends HttpServlet {
             user.setPollAnswer(answer);
             answer.setUser(user);
             userRepository.merge(user);
+
             saveSuccessValuesToCookies(req, resp, formParams);
-            resp.sendRedirect(req.getContextPath() + "/");
+            resp.sendRedirect(req.getContextPath() + "/pages/formSuccess.jsp");
         }
     }
 
