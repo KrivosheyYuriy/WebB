@@ -10,7 +10,8 @@
 
 <div class="navbar">
     <a href="${pageContext.request.contextPath}/">Home</a>
-    <a href="pages/form">Form</a>
+    <a href="login">Log in</a>
+    <a href="form">Form</a>
     <!-- Add more links here -->
 </div>
 

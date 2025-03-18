@@ -4,7 +4,7 @@ function copyToClipboard(elementId) {
 
     navigator.clipboard.writeText(text)
         .then(() => {
-            alert('Скопировано!'); // Optional: Show a success message
+            element.text = 'Скопировано!';
         })
         .catch(err => {
             console.error('Ошибка при копировании: ', err);

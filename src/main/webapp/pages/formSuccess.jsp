@@ -21,7 +21,7 @@
         <button class="copy-button" onclick="copyToClipboard('passwordValue')">Копировать</button>
     </div>
 
-    <p>Пожалуйста, сохраните ваши логин и пароль, эта страница видна только 1 раз</p>
+    <p>Пожалуйста, сохраните ваши логин и пароль, эта страница видна только 1 раз.</p>
     <a href="/" class="main-page-button">Перейти на главную страницу</a>
 </div>
 </body>

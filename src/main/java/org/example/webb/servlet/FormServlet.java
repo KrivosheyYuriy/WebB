@@ -22,6 +22,7 @@ import org.example.webb.repository.impl.UserRepositoryImpl;
 import org.example.webb.service.PollService;
 import org.example.webb.service.UserService;
 import org.example.webb.util.CookieUtil;
+import org.example.webb.util.PasswordUtil;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -35,7 +36,7 @@ import java.util.*;
 import static org.example.webb.util.CookieUtil.getAndRemoveCookie;
 import static org.example.webb.util.CookieUtil.getCookieValue;
 
-@WebServlet(name = "helloServlet", value = "/pages/form")
+@WebServlet(name = "formServlet", value = "/form")
 public class FormServlet extends HttpServlet {
 
     private Validator validator;
@@ -46,7 +47,7 @@ public class FormServlet extends HttpServlet {
     private LanguageRepository languageRepository;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         pollAnswersRepository = new PollAnswersRepositoryImpl(); // или другой способ создания репозитория
@@ -104,7 +105,7 @@ public class FormServlet extends HttpServlet {
         }
         catch (Exception e) {
             saveErrorMessageToCookie(req, resp);
-            req.getRequestDispatcher("/pages/form").forward(req, resp);
+            req.getRequestDispatcher("/form").forward(req, resp);
             return;
         }
 
@@ -116,14 +117,14 @@ public class FormServlet extends HttpServlet {
         } catch (Exception e) {
             // Обработка ошибки парсинга даты
             req.setAttribute("errorMessage", "Некорректный формат даты рождения");
-            req.getRequestDispatcher("/pages/form").forward(req, resp);
+            req.getRequestDispatcher("/form").forward(req, resp);
             return;
         }
 
       //  Обрабатываем чекбокс
         if (agreement == null || !agreement.equalsIgnoreCase("on")) {
             req.setAttribute("errorMessage", "Не подтверждено ознакомление с контрактом");
-            req.getRequestDispatcher("/pages/form").forward(req, resp);
+            req.getRequestDispatcher("/form").forward(req, resp);
             return;
         }
 
@@ -138,17 +139,22 @@ public class FormServlet extends HttpServlet {
             }
 
             req.setAttribute("errorMessage", errorMessage);
-            req.getRequestDispatcher("/pages/form").forward(req, resp);
+            req.getRequestDispatcher("/form").forward(req, resp);
         } else {
             // Валидация пройдена
             PollAnswer answer = pollService.addPoll(formDto); //  Передаем DTO в сервис
-            User user = userService.addUser();
+
+            String password = PasswordUtil.generateStrongPassword();
+            User user = userService.addUser(password);
             user.setPollAnswer(answer);
             answer.setUser(user);
             userRepository.merge(user);
 
+            req.setAttribute("generatedLogin", user.getUsername());
+            req.setAttribute("generatedPassword", password);
+
             saveSuccessValuesToCookies(req, resp, formParams);
-            resp.sendRedirect(req.getContextPath() + "/pages/formSuccess.jsp");
+            req.getRequestDispatcher("/pages/formSuccess.jsp").forward(req, resp);
         }
     }
 

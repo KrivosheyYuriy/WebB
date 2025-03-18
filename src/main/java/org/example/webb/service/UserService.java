@@ -13,9 +13,8 @@ public class UserService {
     }
 
     @Transactional
-    public User addUser() {
+    public User addUser(String password) {
         final String salt = PasswordUtil.generateSalt();
-        final String password = PasswordUtil.generateStrongPassword();
         final String username = String.format("user%d", userRepository.count() + 1);
 
         User user = new User(username, PasswordUtil.hashPassword(password, salt), salt);

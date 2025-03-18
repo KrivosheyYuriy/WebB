@@ -29,7 +29,7 @@ public class PollAnswer {
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PollAnswerLanguage> pollAnswersLanguages = new HashSet<>();
 
-    @OneToOne // Добавляем связь
+    @OneToOne(cascade = CascadeType.ALL) // Добавляем связь
     @JoinColumn(name = "user_id") // Foreign key column in PollAnswer
     private User user; // Reference to User entity
 
@@ -96,5 +96,29 @@ public class PollAnswer {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
     }
 }
