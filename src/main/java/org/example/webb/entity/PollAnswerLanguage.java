@@ -24,6 +24,10 @@ public class PollAnswerLanguage {
         this.language = language;
     }
 
+    public PollAnswerLanguageKey getId() {
+        return id;
+    }
+
     public PollAnswerLanguage() {}
 
     public PollAnswer getAnswer() {
@@ -32,5 +36,23 @@ public class PollAnswerLanguage {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public void setAnswer(PollAnswer answer) {
+        this.answer = answer;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof PollAnswerLanguage that))
+            return false;
+
+        return this.id.equals(that.id);
+    }
+
+    public int hashCode() {
+        return this.id.hashCode();
     }
 }

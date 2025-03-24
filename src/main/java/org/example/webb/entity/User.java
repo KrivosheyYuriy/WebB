@@ -2,6 +2,8 @@ package org.example.webb.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -18,7 +20,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String passwordHash;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) // Добавляем связь
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) // Добавляем связь
     private PollAnswer pollAnswer;
 
     public User(String username, String passwordHash, String salt) {
@@ -65,5 +67,22 @@ public class User {
 
     public void setPollAnswer(PollAnswer pollAnswer) {
         this.pollAnswer = pollAnswer;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username);
+    }
+
+    public int hashCode() {
+        return Objects.hash(id, username);
     }
 }

@@ -88,6 +88,12 @@ public class PollAnswer {
 
     public void addPollAnswerLanguage(PollAnswerLanguage pollAnswerLanguage) {
         pollAnswersLanguages.add(pollAnswerLanguage);
+        pollAnswerLanguage.setAnswer(this);
+    }
+
+    public void removePollAnswerLanguage(PollAnswerLanguage pollAnswerLanguage) {
+        this.pollAnswersLanguages.remove(pollAnswerLanguage);
+        pollAnswerLanguage.setAnswer(null); // Обнуляем обратную ссылку
     }
 
     public User getUser() {
@@ -124,5 +130,13 @@ public class PollAnswer {
 
     public void updateReceived() {
         this.received = LocalDateTime.now();
+    }
+
+    public boolean equals(PollAnswer pollAnswer) {
+        return this.getId().equals(pollAnswer.getId());
+    }
+
+    public int hashCode() {
+        return this.getId().hashCode();
     }
 }

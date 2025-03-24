@@ -11,9 +11,11 @@ import org.example.webb.dto.PollAnswerDTO;
 import org.example.webb.entity.PollAnswer;
 import org.example.webb.entity.User;
 import org.example.webb.repository.LanguageRepository;
+import org.example.webb.repository.PollAnswerLanguageRepository;
 import org.example.webb.repository.PollAnswersRepository;
 import org.example.webb.repository.UserRepository;
 import org.example.webb.repository.impl.LanguageRepositoryImpl;
+import org.example.webb.repository.impl.PollAnswerLanguageRepositoryImpl;
 import org.example.webb.repository.impl.PollAnswersRepositoryImpl;
 import org.example.webb.repository.impl.UserRepositoryImpl;
 import org.example.webb.service.PollService;
@@ -43,6 +45,7 @@ public class FormServlet extends HttpServlet {
     private UserRepository userRepository;
     private PollAnswersRepository pollAnswersRepository;
     private LanguageRepository languageRepository;
+    private PollAnswerLanguageRepository pollAnswerLanguageRepository;
 
     @Override
     public void init() {
@@ -51,7 +54,8 @@ public class FormServlet extends HttpServlet {
         pollAnswersRepository = new PollAnswersRepositoryImpl(); // или другой способ создания репозитория
         languageRepository = new LanguageRepositoryImpl();
         userRepository = new UserRepositoryImpl();
-        pollService = new PollService(pollAnswersRepository, languageRepository); // Передаем репозитории
+        pollAnswerLanguageRepository = new PollAnswerLanguageRepositoryImpl();
+        pollService = new PollService(pollAnswersRepository, languageRepository, pollAnswerLanguageRepository); // Передаем репозитории
         userService = new UserService(userRepository);
     }
 

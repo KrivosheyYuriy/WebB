@@ -36,4 +36,12 @@ public class Language {
     public void setPollAnswersLanguages(Set<PollAnswerLanguage> pollAnswersLanguages) {
         this.pollAnswersLanguages = pollAnswersLanguages;
     }
+
+    public boolean equals(Language language) {
+        return this.getId().equals(language.getId());
+    }
+
+    public int hashCode() {
+        return this.getId().hashCode();
+    }
 }
