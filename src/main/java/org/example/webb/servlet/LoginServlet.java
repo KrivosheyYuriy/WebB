@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.webb.entity.User;
+import org.example.webb.repository.AdminRepository;
 import org.example.webb.repository.UserRepository;
+import org.example.webb.repository.impl.AdminRepositoryImpl;
 import org.example.webb.repository.impl.UserRepositoryImpl;
 import org.example.webb.util.PasswordUtil;
 
@@ -20,9 +22,11 @@ public class LoginServlet extends HttpServlet { // Добавлено объяв
     private static final String CSRF_TOKEN_PARAM = "csrfToken"; // Название параметра для CSRF-токена
     private static final String LOGIN_PAGE = "/pages/login.jsp";
     private UserRepository userRepository;
+    private AdminRepository adminRepository;
 
     @Override
     public void init() {
+        adminRepository = new AdminRepositoryImpl();
         userRepository = new UserRepositoryImpl();
     }
 
@@ -58,12 +62,11 @@ public class LoginServlet extends HttpServlet { // Добавлено объяв
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String csrfToken = request.getParameter(CSRF_TOKEN_PARAM);
-        System.out.println(csrfToken);
 
         HttpSession session = request.getSession(false); // Получаем сессию, не создавая новую
 

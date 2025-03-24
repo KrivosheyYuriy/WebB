@@ -26,7 +26,7 @@ public class PollAnswer {
 
     private LocalDateTime received;
 
-    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<PollAnswerLanguage> pollAnswersLanguages = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL) // Добавляем связь
@@ -120,5 +120,9 @@ public class PollAnswer {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    public void updateReceived() {
+        this.received = LocalDateTime.now();
     }
 }

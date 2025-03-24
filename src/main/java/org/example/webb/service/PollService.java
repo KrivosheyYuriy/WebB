@@ -64,4 +64,36 @@ public class PollService {
         pollRepository.merge(pollAnswer); // Use merge to update
         return pollAnswer;
     }
+
+    @Transactional
+    public void updatePoll(PollAnswerDTO formDto, PollAnswer pollAnswer) {
+        String username = formDto.getName();
+        String phoneNumber = formDto.getPhone();
+        String email = formDto.getEmail();
+        LocalDate birthday = formDto.getBirthday();
+        String gender = formDto.getGender();
+        String biography = formDto.getBiography();
+
+        pollAnswer.setUsername(username);
+        pollAnswer.setPhoneNumber(phoneNumber);
+        pollAnswer.setEmail(email);
+        pollAnswer.setBirthday(birthday);
+        pollAnswer.setGender(gender);
+        pollAnswer.setBiography(biography);
+        pollAnswer.getPollAnswersLanguages().clear();
+
+        for (Long languageId : formDto.getLanguagesId()) {
+            Language language = languageRepository.findById(languageId);
+            if (language == null) {
+                // Обработка ситуации, когда язык не найден
+                System.err.println("Language not found with ID: " + languageId);
+                continue; // Пропускаем язык, если он не найден
+            }
+            PollAnswerLanguage pollAnswerLanguage = new PollAnswerLanguage(pollAnswer, language);
+            pollAnswer.addPollAnswerLanguage(pollAnswerLanguage);
+        }
+
+        pollAnswer.updateReceived();
+        pollRepository.merge(pollAnswer);
+    }
 }

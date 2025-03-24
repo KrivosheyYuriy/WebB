@@ -26,14 +26,17 @@ public class AdminServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+
+    }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) {}
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) {
+
+    }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("GOT DELETE");
         try {
             // 1. Получить ID из URL
             String pathInfo = request.getPathInfo();
@@ -47,18 +50,13 @@ public class AdminServlet extends HttpServlet {
 
             // 2. Удалить данные из базы данных
             PollAnswer answer = pollAnswersRepository.findById(id);
-            System.out.println(answer);
             if (answer == null) {
-                System.out.println("asdf");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
             else {
-                System.out.println("deleted");
                 pollAnswersRepository.deleteById(id);
-                System.out.println(pollAnswersRepository.findById(id) == null);
-                System.out.println("OK");
-                System.out.println(answer);
                 response.setStatus(HttpServletResponse.SC_OK);
+                response.sendRedirect("/admin");
             }
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

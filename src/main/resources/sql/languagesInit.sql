@@ -11,3 +11,6 @@ insert into language values (1, 'Pascal'),
                             (9, 'Clojure'),
                             (10, 'Prolog'),
                             (11, 'Scala');
+
+insert into admin values (1, '', 'ioCTQBOBeT7I7rew8S0DDA==',
+                          'EJugNf2VDUoSb7gEAF+YKjVU4HX0rX/bOK83TrX3Zno=');

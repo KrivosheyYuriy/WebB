@@ -9,7 +9,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "salt")
@@ -18,7 +18,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String passwordHash;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) // Добавляем связь
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) // Добавляем связь
     private PollAnswer pollAnswer;
 
     public User(String username, String passwordHash, String salt) {

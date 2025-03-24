@@ -2,10 +2,7 @@ package org.example.webb.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -23,15 +20,16 @@ import org.example.webb.service.PollService;
 import org.example.webb.service.UserService;
 import org.example.webb.util.CookieUtil;
 import org.example.webb.util.PasswordUtil;
+import org.hibernate.Session;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.example.webb.util.CookieUtil.getAndRemoveCookie;
 import static org.example.webb.util.CookieUtil.getCookieValue;
@@ -59,6 +57,25 @@ public class FormServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        System.out.println(session);
+        if (session != null && session.getAttribute("user") != null) {
+            String username = (String) session.getAttribute("user");
+//            System.out.println(username);
+            User user = userRepository.findByUsername(username);
+            if (user != null) { // авторизован
+                PollAnswer pollAnswer = user.getPollAnswer();
+                setValuesOfAnswer(req, pollAnswer);
+                req.getRequestDispatcher("/pages/form.jsp").forward(req, resp);
+                return;
+            }
+        }
+        setValuesOfCookies(req, resp);
+
+        req.getRequestDispatcher("/pages/form.jsp").forward(req, resp);
+    }
+
+    private void setValuesOfCookies(HttpServletRequest req, HttpServletResponse resp) {
         // Восстановление значений полей из cookie
         req.setAttribute("name", getCookieValue(req, "name"));
         req.setAttribute("phone", getCookieValue(req, "phone"));
@@ -70,11 +87,23 @@ public class FormServlet extends HttpServlet {
 
         // Восстановление сообщения об ошибке из cookie
         String errorMessage = getAndRemoveCookie(req, resp, "errorMessage");
-        if (errorMessage != null) {
+        if (errorMessage != null)
             req.setAttribute("errorMessage", errorMessage);
-        }
+    }
 
-        req.getRequestDispatcher("/pages/form.jsp").forward(req, resp);
+    private void setValuesOfAnswer(HttpServletRequest req, PollAnswer pollAnswer) {
+        req.setAttribute("name", pollAnswer.getUsername());
+        req.setAttribute("phone", pollAnswer.getPhoneNumber());
+        req.setAttribute("email", pollAnswer.getEmail());
+        req.setAttribute("biography", pollAnswer.getBiography());
+        req.setAttribute("birthday", pollAnswer.getBirthday());
+        req.setAttribute("gender", pollAnswer.getGender());
+        System.out.println(pollAnswer.getGender());
+        req.setAttribute("language", ", ".concat(pollAnswer.getPollAnswersLanguages().
+                stream().
+                map(answ -> answ.getLanguage().getId().toString()).
+                collect(Collectors.joining(", "))
+        ).concat(", "));
     }
 
     @Override
@@ -102,8 +131,7 @@ public class FormServlet extends HttpServlet {
         try {
             languages = Arrays.stream(req.getParameterValues("language")).
                     map(Long::parseLong).toList();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             saveErrorMessageToCookie(req, resp);
             req.getRequestDispatcher("/form").forward(req, resp);
             return;
@@ -121,7 +149,7 @@ public class FormServlet extends HttpServlet {
             return;
         }
 
-      //  Обрабатываем чекбокс
+        //  Обрабатываем чекбокс
         if (agreement == null || !agreement.equalsIgnoreCase("on")) {
             req.setAttribute("errorMessage", "Не подтверждено ознакомление с контрактом");
             req.getRequestDispatcher("/form").forward(req, resp);
@@ -141,6 +169,16 @@ public class FormServlet extends HttpServlet {
             req.setAttribute("errorMessage", errorMessage);
             req.getRequestDispatcher("/form").forward(req, resp);
         } else {
+            HttpSession session = req.getSession();
+            if (session != null && session.getAttribute("user") != null) {
+                System.out.println("OK");
+                User user = userRepository.findByUsername(session.getAttribute("user").toString());
+                PollAnswer pollAnswer = user.getPollAnswer();
+                pollService.updatePoll(formDto, pollAnswer);
+                saveSuccessValuesToCookies(req, resp, formParams);
+                req.getRequestDispatcher("/").forward(req, resp);
+                return;
+            }
             // Валидация пройдена
             PollAnswer answer = pollService.addPoll(formDto); //  Передаем DTO в сервис
 
