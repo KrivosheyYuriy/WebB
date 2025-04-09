@@ -96,7 +96,7 @@ public class PollService {
         List<Long> languagesToAdd = formDto.getLanguagesId().stream()
                 .filter(languageId -> !existingLanguageIds.contains(languageId))
                 .toList();
-        System.out.println(languagesToAdd);
+
         // Добавим новые связи
         for (Long languageId : languagesToAdd) {
             Language language = languageRepository.findById(languageId);

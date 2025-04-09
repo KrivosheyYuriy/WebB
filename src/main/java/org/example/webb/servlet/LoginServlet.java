@@ -12,11 +12,14 @@ import org.example.webb.repository.AdminRepository;
 import org.example.webb.repository.UserRepository;
 import org.example.webb.repository.impl.AdminRepositoryImpl;
 import org.example.webb.repository.impl.UserRepositoryImpl;
+import org.example.webb.util.CSRFTokenUtil;
 import org.example.webb.util.PasswordUtil;
 
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Base64;
+
+import static org.example.webb.util.CSRFTokenUtil.generateCsrfToken;
 
 @WebServlet(name = "loginServlet", value = "/login")
 public class LoginServlet extends HttpServlet { // Добавлено объявление класса AuthServlet
@@ -29,14 +32,6 @@ public class LoginServlet extends HttpServlet { // Добавлено объяв
     public void init() {
         adminRepository = new AdminRepositoryImpl();
         userRepository = new UserRepositoryImpl();
-    }
-
-    // Метод для генерации случайного CSRF-токена
-    private static String generateCsrfToken() {
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[32];
-        random.nextBytes(bytes);
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
     @Override
@@ -54,9 +49,7 @@ public class LoginServlet extends HttpServlet { // Добавлено объяв
             HttpSession session2 = request.getSession();
 
             String csrfToken = generateCsrfToken(); // Генерация CSRF токена
-            System.out.println(csrfToken);
             session2.setAttribute(CSRF_TOKEN_PARAM, csrfToken); // Сохранение в сессии
-
             request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
         }
     }
@@ -67,12 +60,10 @@ public class LoginServlet extends HttpServlet { // Добавлено объяв
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String csrfToken = request.getParameter(CSRF_TOKEN_PARAM);
 
         HttpSession session = request.getSession(false); // Получаем сессию, не создавая новую
 
-        if (session == null || csrfToken == null || !csrfToken.equals(session.getAttribute("csrfToken"))){
-            // CSRF-токен отсутствует или не совпадает - возможная CSRF-атака
+        if (!CSRFTokenUtil.checkCSRFToken(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "CSRF token invalid"); // Отклоняем запрос
             return;
         }

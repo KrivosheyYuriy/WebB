@@ -22,6 +22,7 @@ import org.example.webb.repository.impl.LanguageRepositoryImpl;
 import org.example.webb.repository.impl.PollAnswerLanguageRepositoryImpl;
 import org.example.webb.repository.impl.PollAnswersRepositoryImpl;
 import org.example.webb.service.PollService;
+import org.example.webb.util.CSRFTokenUtil;
 import org.example.webb.util.RequestUtil;
 
 import java.io.IOException;
@@ -30,11 +31,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+import static org.example.webb.util.CSRFTokenUtil.generateCsrfToken;
 import static org.example.webb.util.CookieUtil.saveErrorMessageToCookie;
 import static org.example.webb.util.CookieUtil.saveSuccessValuesToCookies;
 
 @WebServlet(name = "adminServlet", value = "/admin/*")
 public class AdminServlet extends HttpServlet {
+    private static final String CSRF_TOKEN_PARAM = "csrfToken";
     private PollService pollService;
     private Validator validator;
     private AdminRepository adminRepository;
@@ -54,7 +57,6 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        System.out.println("AdminServlet doGet");
         if (!checkAdmin(request)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().println("unauthorized");
@@ -71,7 +73,7 @@ public class AdminServlet extends HttpServlet {
             // Устанавливаем статистику как атрибут запроса, чтобы JSP могла получить к ней доступ
             request.setAttribute("languageStatistics", statistics);
 
-            // Перенаправляем запрос на JSP страницу
+            // Перенаправляем запрос на JSP страницуpublic
             request.getRequestDispatcher("/pages/langstat.jsp").forward(request, response);
             return;
         }
@@ -85,6 +87,10 @@ public class AdminServlet extends HttpServlet {
                     response.getWriter().println("answer not found");
                     return;
                 }
+                HttpSession session2 = request.getSession();
+                String csrfToken = generateCsrfToken(); // Генерация CSRF токена
+                session2.setAttribute(CSRF_TOKEN_PARAM, csrfToken); // Сохранение в сессии
+
                 RequestUtil.setValuesOfAnswer(request, answer);
                 request.setAttribute("formId", id);
                 request.getRequestDispatcher("/pages/adminForm.jsp").forward(request, response);
@@ -100,6 +106,11 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (!CSRFTokenUtil.checkCSRFToken(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "CSRF token invalid"); // Отклоняем запрос
+            return;
+        }
+
         if (!checkAdmin(req)) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             resp.getWriter().println("unauthorized");
@@ -196,6 +207,11 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (!CSRFTokenUtil.checkCSRFToken(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "CSRF token invalid"); // Отклоняем запрос
+            return;
+        }
+
         if (!checkAdmin(request)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().println("unauthorized");
@@ -246,7 +262,6 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
             String username = (String) session.getAttribute("user");
-            System.out.println(username);
             Admin admin = adminRepository.findByUsername(username);
             return admin != null;
         }

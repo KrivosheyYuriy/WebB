@@ -71,7 +71,7 @@
             С контрактом ознакомлен(а)
         </label>
         <br>
-
+        <input type="hidden" name="csrfToken" value="${csrfToken}"/>
         <button type="submit">Сохранить</button>
     </form>
 </div>

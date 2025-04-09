@@ -23,6 +23,7 @@ import org.example.webb.repository.impl.PollAnswersRepositoryImpl;
 import org.example.webb.repository.impl.UserRepositoryImpl;
 import org.example.webb.service.PollService;
 import org.example.webb.service.UserService;
+import org.example.webb.util.CSRFTokenUtil;
 import org.example.webb.util.PasswordUtil;
 import org.example.webb.util.RequestUtil;
 
@@ -32,12 +33,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+import static org.example.webb.util.CSRFTokenUtil.generateCsrfToken;
 import static org.example.webb.util.CookieUtil.saveErrorMessageToCookie;
 import static org.example.webb.util.CookieUtil.saveSuccessValuesToCookies;
 
 @WebServlet(name = "formServlet", value = "/form")
 public class FormServlet extends HttpServlet {
-
+    private static final String CSRF_TOKEN_PARAM = "csrfToken";
     private Validator validator;
     private PollService pollService;
     private UserService userService;
@@ -61,10 +63,16 @@ public class FormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
+
+        if (session.getAttribute("user") != null) {
             String username = (String) session.getAttribute("user");
             User user = userRepository.findByUsername(username);
             if (user != null) { // авторизован
+                HttpSession session2 = req.getSession();
+
+                String csrfToken = generateCsrfToken(); // Генерация CSRF токена
+                session2.setAttribute(CSRF_TOKEN_PARAM, csrfToken); // Сохранение в сессии
+
                 PollAnswer pollAnswer = user.getPollAnswer();
                 RequestUtil.setValuesOfAnswer(req, pollAnswer);
                 req.getRequestDispatcher("/pages/form.jsp").forward(req, resp);
@@ -141,6 +149,10 @@ public class FormServlet extends HttpServlet {
         } else {
             HttpSession session = req.getSession();
             if (session != null && session.getAttribute("user") != null) {
+                if (!CSRFTokenUtil.checkCSRFToken(req)) {
+                    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "CSRF token invalid"); // Отклоняем запрос
+                    return;
+                }
                 User user = userRepository.findByUsername(session.getAttribute("user").toString());
                 PollAnswer pollAnswer = user.getPollAnswer();
                 pollService.updatePoll(formDto, pollAnswer);

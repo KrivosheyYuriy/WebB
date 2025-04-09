@@ -3,16 +3,16 @@
 <html>
 <head>
     <title>Форма</title>
+    <script src="/js/deleteFormWithConfirm.js"></script>
     <link rel="stylesheet" href="/styles/form.css">
     <link rel="stylesheet" href="/styles/footer.css">
-    <script src="/js/deleteFormWithConfirm.js"></script>
 </head>
 <body>
 <div class="content">
 
     <form id="form" action="${formId}" method="post">
         <button id="deleteFormButton" onclick="event.preventDefault(); deleteFormWithConfirm('${formId}')">Удалить форму</button>
-        <h1>Пожалуйста, заполните форму</h1>
+        <h1>Просмотр формы</h1>
 
         <%-- Отображение сообщения об ошибке --%>
         <p style="color: red;">${errorMessage}</p>
@@ -73,7 +73,7 @@
             С контрактом ознакомлен(а)
         </label>
         <br>
-
+        <input type="hidden" name="csrfToken" value="${csrfToken}"/>
         <button type="submit">Сохранить</button>
     </form>
 </div>
