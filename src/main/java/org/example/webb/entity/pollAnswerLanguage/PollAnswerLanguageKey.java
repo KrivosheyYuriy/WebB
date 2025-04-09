@@ -1,4 +1,4 @@
-package org.example.webb.entity;
+package org.example.webb.entity.pollAnswerLanguage;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

@@ -3,12 +3,11 @@ package org.example.webb.service;
 import jakarta.transaction.Transactional;
 import org.example.webb.dto.PollAnswerDTO;
 import org.example.webb.entity.Language;
-import org.example.webb.entity.PollAnswerLanguage;
+import org.example.webb.entity.pollAnswerLanguage.PollAnswerLanguage;
 import org.example.webb.entity.PollAnswer;
 import org.example.webb.repository.LanguageRepository;
 import org.example.webb.repository.PollAnswerLanguageRepository;
 import org.example.webb.repository.PollAnswersRepository;
-import org.example.webb.repository.impl.PollAnswerLanguageRepositoryImpl;
 
 
 import java.time.LocalDate;
@@ -93,12 +92,11 @@ public class PollService {
         Set<Long> existingLanguageIds = pollAnswer.getPollAnswersLanguages().stream()
                 .map(pal -> pal.getLanguage().getId())
                 .collect(Collectors.toSet());
-
         // Определим языки для добавления
         List<Long> languagesToAdd = formDto.getLanguagesId().stream()
                 .filter(languageId -> !existingLanguageIds.contains(languageId))
                 .toList();
-
+        System.out.println(languagesToAdd);
         // Добавим новые связи
         for (Long languageId : languagesToAdd) {
             Language language = languageRepository.findById(languageId);
@@ -114,7 +112,6 @@ public class PollService {
         List<PollAnswerLanguage> languagesToRemove = pollAnswer.getPollAnswersLanguages().stream()
                 .filter(pal -> !formDto.getLanguagesId().contains(pal.getLanguage().getId()))
                 .toList();
-
         // Удалим лишние связи
         for (PollAnswerLanguage pal : languagesToRemove) {
             pollAnswer.removePollAnswerLanguage(pal); // Удаляем связь из коллекции

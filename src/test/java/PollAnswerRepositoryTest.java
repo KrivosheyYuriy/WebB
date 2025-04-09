@@ -1,17 +1,11 @@
 import jakarta.transaction.Transactional;
-import org.example.webb.entity.Language;
 import org.example.webb.entity.PollAnswer;
-import org.example.webb.entity.PollAnswerLanguage;
-import org.example.webb.entity.User;
 import org.example.webb.repository.PollAnswersRepository;
 import org.example.webb.repository.impl.PollAnswersRepositoryImpl;
-import org.example.webb.util.PasswordUtil;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

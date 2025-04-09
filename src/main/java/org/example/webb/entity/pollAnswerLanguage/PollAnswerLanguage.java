@@ -1,6 +1,8 @@
-package org.example.webb.entity;
+package org.example.webb.entity.pollAnswerLanguage;
 
 import jakarta.persistence.*;
+import org.example.webb.entity.Language;
+import org.example.webb.entity.PollAnswer;
 
 @Entity
 @Table(name = "poll_answer_languages") // Явное указание имени таблицы

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.example.webb.entity.Admin;
 import org.example.webb.entity.User;
 import org.example.webb.repository.AdminRepository;
 import org.example.webb.repository.UserRepository;
@@ -80,7 +81,7 @@ public class LoginServlet extends HttpServlet { // Добавлено объяв
         session.removeAttribute(CSRF_TOKEN_PARAM);
 
         // Проверяем учетные данные (замените на реальную проверку)
-        if (isValidUser(username, password)) {
+        if (isValidUser(username, password) || isValidAdmin(username, password)) {
             // Аутентификация прошла успешно
             session = request.getSession(); // Получаем сессию
             session.setAttribute("user", username); // Сохраняем имя пользователя в сессии
@@ -100,9 +101,18 @@ public class LoginServlet extends HttpServlet { // Добавлено объяв
     // Вспомогательный метод для проверки учетных данные (замените на реальную проверку)
     private boolean isValidUser(String username, String password) {
         User user = userRepository.findByUsername(username);
+
         if (user == null)
             return false;
 
         return PasswordUtil.verifyPassword(password, user.getPasswordHash(), user.getSalt());
+    }
+
+    private boolean isValidAdmin(String username, String password) {
+        Admin admin = adminRepository.findByUsername(username);
+        if (admin == null)
+            return false;
+
+        return PasswordUtil.verifyPassword(password, admin.getPasswordHash(), admin.getSalt());
     }
 }

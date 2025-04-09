@@ -1,9 +1,11 @@
 package org.example.webb.entity;
 import jakarta.persistence.*;
+import org.example.webb.entity.pollAnswerLanguage.PollAnswerLanguage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -132,11 +134,14 @@ public class PollAnswer {
         this.received = LocalDateTime.now();
     }
 
-    public boolean equals(PollAnswer pollAnswer) {
-        return this.getId().equals(pollAnswer.getId());
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof PollAnswer answer)) return false;
+        return Objects.equals(id, answer.id);
     }
 
+    @Override
     public int hashCode() {
-        return this.getId().hashCode();
+        return Objects.hashCode(id);
     }
 }

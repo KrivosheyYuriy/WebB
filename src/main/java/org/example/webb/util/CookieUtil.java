@@ -89,4 +89,18 @@ public class CookieUtil {
             }
         }
     }
+
+    public static void saveErrorMessageToCookie(HttpServletRequest req, HttpServletResponse resp) {
+        String encodedErrorMessage = URLEncoder.encode("errorMessage", StandardCharsets.UTF_8);
+        Cookie errorCookie = new Cookie("errorMessage", encodedErrorMessage);
+        errorCookie.setMaxAge(-1); // Сессионный cookie
+        errorCookie.setPath(req.getContextPath());
+        resp.addCookie(errorCookie);
+    }
+
+    public static void saveSuccessValuesToCookies(HttpServletRequest req, HttpServletResponse resp,
+                                                          Map<String, String> formParams) {
+        int oneYear = 60 * 60 * 24 * 365;
+        CookieUtil.saveValuesToCookies(resp, formParams, oneYear, req.getContextPath());
+    }
 }

@@ -1,9 +1,11 @@
 package org.example.webb.repository.impl;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import org.example.webb.entity.Language;
-import org.example.webb.entity.PollAnswerLanguage;
+import org.example.webb.entity.pollAnswerLanguage.PollAnswerLanguage;
 import org.example.webb.repository.PollAnswerLanguageRepository;
+
+import java.util.List;
 
 public class PollAnswerLanguageRepositoryImpl extends AbstractRepositoryImpl<PollAnswerLanguage>
         implements PollAnswerLanguageRepository {
@@ -12,16 +14,17 @@ public class PollAnswerLanguageRepositoryImpl extends AbstractRepositoryImpl<Pol
     }
 
     @Override
-    public long countByLanguage(Language language) {
+    public List<Object[]> countLanguages() {
         try {
-            TypedQuery<Long> query = getEntityManager().
-                    createQuery("SELECT count(*) from PollAnswerLanguage p where p.id.languageId = :id",
-                            Long.class);
-            query.setParameter("id", language.getId());
-            return query.getSingleResult();
-        }
-        catch (NullPointerException e) {
-            return 0;
+            EntityManager em = getEntityManager();
+
+            TypedQuery<Object[]> query = em.createQuery(
+                    "SELECT MAX(p.language.title), COUNT(p) FROM PollAnswerLanguage p GROUP BY p.language.id",
+                    Object[].class);
+
+            return query.getResultList();
+        } catch (Exception e) {
+            return List.of();
         }
     }
 }

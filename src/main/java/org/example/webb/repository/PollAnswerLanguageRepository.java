@@ -1,9 +1,10 @@
 package org.example.webb.repository;
 
-import org.example.webb.entity.Language;
-import org.example.webb.entity.PollAnswerLanguage;
-import org.example.webb.entity.PollAnswerLanguageKey;
+import org.example.webb.entity.pollAnswerLanguage.PollAnswerLanguage;
+import org.example.webb.entity.pollAnswerLanguage.PollAnswerLanguageKey;
+
+import java.util.List;
 
 public interface PollAnswerLanguageRepository extends CrudRepository<PollAnswerLanguage, PollAnswerLanguageKey> {
-    long countByLanguage(Language language);
+    List<Object[]> countLanguages();
 }

@@ -102,3 +102,19 @@ select:required,
 textarea:required {
     border-color: #800000; /* Красная рамка для обязательных полей */
 }
+
+#deleteFormButton {
+    float: right;
+    background-color: #f44336; /* Красный цвет */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px; /* Отступ снизу */
+}
+
+#deleteFormButton:hover {
+    background-color: #da190b; /* Более темный красный при наведении */
+}

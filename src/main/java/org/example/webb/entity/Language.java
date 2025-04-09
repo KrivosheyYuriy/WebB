@@ -1,7 +1,10 @@
 package org.example.webb.entity;
 
 import jakarta.persistence.*;
+import org.example.webb.entity.pollAnswerLanguage.PollAnswerLanguage;
+
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -37,11 +40,14 @@ public class Language {
         this.pollAnswersLanguages = pollAnswersLanguages;
     }
 
-    public boolean equals(Language language) {
-        return this.getId().equals(language.getId());
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Language language)) return false;
+        return Objects.equals(title, language.title);
     }
 
+    @Override
     public int hashCode() {
-        return this.getId().hashCode();
+        return Objects.hashCode(title);
     }
 }
