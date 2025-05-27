@@ -207,11 +207,6 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (!CSRFTokenUtil.checkCSRFToken(request)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "CSRF token invalid"); // Отклоняем запрос
-            return;
-        }
-
         if (!checkAdmin(request)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().println("unauthorized");
@@ -242,12 +237,12 @@ public class AdminServlet extends HttpServlet {
             if (answer == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().println("Form not found with ID: " + id);
-                return; // Очень важно выйти из метода, если не нашли.
+                return;
             }
 
             pollAnswersRepository.deleteById(id);
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().println("Form deleted successfully."); // Отправьте сообщение об успехе
+            response.getWriter().println("Form deleted successfully.");
 
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
